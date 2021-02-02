@@ -1,12 +1,14 @@
 package com.atguigu.gmall.pms.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
 import com.atguigu.core.bean.PageVo;
 import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.core.bean.Resp;
+import com.sun.org.apache.xml.internal.resolver.CatalogEntry;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,6 +94,14 @@ public class CategoryController {
 		categoryService.removeByIds(Arrays.asList(catIds));
 
         return Resp.ok(null);
+    }
+
+    @ApiOperation("根据分类等级或者父ID查询分类")
+    @GetMapping
+    public Resp<List<CategoryEntity>> queryCategory(@RequestParam(value = "level",defaultValue = "0") Integer level,
+                                                    @RequestParam(value = "parentCid",required = false) Long parentCid){
+        List<CategoryEntity> categoryEntities=this.categoryService.queryCategory(level,parentCid);
+        return Resp.ok(categoryEntities);
     }
 
 }

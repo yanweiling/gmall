@@ -1,5 +1,6 @@
 .idea
 *.iml
+/target
 mvnw*
 .mvn
 # Compiled class file

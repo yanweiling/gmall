@@ -1,18 +1,15 @@
 package com.atguigu.gmall.sms.controller;
 
 import java.util.Arrays;
-import java.util.Map;
-
-
 import com.atguigu.core.bean.PageVo;
 import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.core.bean.Resp;
+import com.atguigu.gmall.sms.vo.SkuSaleVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
 import com.atguigu.gmall.sms.entity.SkuBoundsEntity;
 import com.atguigu.gmall.sms.service.SkuBoundsService;
 
@@ -90,6 +87,14 @@ public class SkuBoundsController {
     @PreAuthorize("hasAuthority('sms:skubounds:delete')")
     public Resp<Object> delete(@RequestBody Long[] ids){
 		skuBoundsService.removeByIds(Arrays.asList(ids));
+
+        return Resp.ok(null);
+    }
+
+    @ApiOperation("新增sku的营销信息")
+    @PostMapping("/skusale/save")
+    public Resp<Object> saveSkuSaleInfo(@RequestBody SkuSaleVO skuSaleVO){
+        this.skuBoundsService.saveSkuSaleInfo(skuSaleVO);
 
         return Resp.ok(null);
     }
