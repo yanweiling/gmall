@@ -2,7 +2,14 @@ package com.example.elastic.demo;
 
 import com.example.elastic.demo.dao.UserRepository;
 import com.example.elastic.demo.pojo.User;
+import org.elasticsearch.action.search.SearchRequest;
+import org.elasticsearch.action.search.SearchResponse;
+import org.elasticsearch.client.RequestOptions;
+import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.SearchHit;
+import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.fetch.subphase.highlight.HighlightBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 import org.elasticsearch.search.sort.SortBuilders;
@@ -15,6 +22,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
 import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +34,9 @@ public class ElasticTest {
 
     @Autowired
     UserRepository userRepository;
+
+    @Autowired
+    RestHighLevelClient restHighLevelClient;
 
     @Test
     public void test() {
@@ -64,24 +75,11 @@ public class ElasticTest {
     public void testNativeQuery(){
         // 自定义查询构建器
         NativeSearchQueryBuilder queryBuilder = new NativeSearchQueryBuilder();
-        // 构建查询
-//        queryBuilder.withQuery(QueryBuilders.matchQuery("name", "韩红"));
-//        // 构建分页条件
-//        queryBuilder.withPageable(PageRequest.of(0, 2));
-//        // 构建排序条件
-//        queryBuilder.withSort(SortBuilders.fieldSort("age").order(SortOrder.DESC));
-//        queryBuilder.withHighlightBuilder(new HighlightBuilder().field("name").preTags("<em>").postTags("</em"));
-//        // 执行查询
-//        Page<User> userPage = this.userRepository.search(queryBuilder.build());
-//        System.out.println("命中数：" + userPage.getTotalElements());
-//        System.out.println("页数：" + userPage.getTotalPages());
-//        userPage.getContent().forEach(System.out::println);
-//        System.out.println(userPage.toString());
 
-//        queryBuilder.withQuery(QueryBuilders.matchAllQuery());
         queryBuilder.withQuery(QueryBuilders.matchQuery("name","李四"));
         queryBuilder.withPageable(PageRequest.of(0,8));
         queryBuilder.withSort(SortBuilders.fieldSort("age").order(SortOrder.ASC));
+        //这种方式没有实现高亮显示
         queryBuilder.withHighlightBuilder(new HighlightBuilder().field("name").preTags("<em>").postTags("</em>"));
         Page<User> userpage=userRepository.search(queryBuilder.build());
 
@@ -92,6 +90,29 @@ public class ElasticTest {
     }
 
     //todo 获取高亮结果集
+    @Test
+    public void testHignLevelShow() throws IOException {
+        SearchSourceBuilder sourceBuilder = new SearchSourceBuilder();
+        sourceBuilder.query(QueryBuilders.matchQuery("name", "李四"));
+        sourceBuilder.sort("age", SortOrder.DESC);
+        sourceBuilder.from(0);
+        sourceBuilder.size(2);
+        sourceBuilder.highlighter(new HighlightBuilder().field("name").preTags("<em>").postTags("</em>"));
+        SearchRequest searchRequest = new SearchRequest("user");
+        searchRequest.types("info");
+        searchRequest.source(sourceBuilder);
+        SearchResponse searchResponse = this.restHighLevelClient.search(searchRequest, RequestOptions.DEFAULT);
+        SearchHits hits = searchResponse.getHits();
+        System.out.println(hits.totalHits);
+        System.out.println(hits.getMaxScore());
+        SearchHit[] searchHits = hits.getHits();
+        for (SearchHit searchHit : searchHits) {
+            System.out.println(searchHit.getHighlightFields());
+            System.out.println(searchHit.getSourceAsString());
+        }
+    }
+
+    //todo 名称精准查询
 
 
 }
