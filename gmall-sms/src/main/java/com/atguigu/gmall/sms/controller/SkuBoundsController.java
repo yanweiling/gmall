@@ -63,7 +63,6 @@ public class SkuBoundsController {
     @PreAuthorize("hasAuthority('sms:skubounds:save')")
     public Resp<Object> save(@RequestBody SkuBoundsEntity skuBounds){
 		skuBoundsService.save(skuBounds);
-
         return Resp.ok(null);
     }
 
@@ -95,7 +94,6 @@ public class SkuBoundsController {
     @PostMapping("/skusale/save")
     public Resp<Object> saveSkuSaleInfo(@RequestBody SkuSaleVO skuSaleVO){
         this.skuBoundsService.saveSkuSaleInfo(skuSaleVO);
-
         return Resp.ok(null);
     }
 
