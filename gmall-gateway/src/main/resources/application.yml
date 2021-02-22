@@ -28,6 +28,13 @@ spring:
         predicates:
         - Path=/sms/**
       - id: auth-route #授权中心
-        uri: lb://api/auth/**
+        uri: lb://auth-service
+        predicates:
+        - Path=/auth/**
 #        filters:
 #          - RewritePath=/api/(?<segment>.*), /$\{segment}
+
+gmall:
+  jwt:
+    pubKeyPath: D:\\rsa\\rsa.pub #公钥地址
+    cookieName: GMALL_TOKEN #cookie名称
