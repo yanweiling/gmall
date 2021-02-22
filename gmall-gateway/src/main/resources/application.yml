@@ -27,3 +27,7 @@ spring:
         uri: lb://sms-service
         predicates:
         - Path=/sms/**
+      - id: auth-route #授权中心
+        uri: lb://api/auth/**
+#        filters:
+#          - RewritePath=/api/(?<segment>.*), /$\{segment}
