@@ -1,7 +1,7 @@
 package com.atguigu.gmall.ums.service.impl;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Service;
-import java.util.Map;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
@@ -10,7 +10,7 @@ import com.atguigu.core.bean.Query;
 import com.atguigu.core.bean.QueryCondition;
 
 import com.atguigu.gmall.ums.dao.MemberDao;
-import com.atguigu.gmall.ums.entity.MemberEntity;
+import com.agtuigu.gmall.ums.entity.MemberEntity;
 import com.atguigu.gmall.ums.service.MemberService;
 
 
@@ -27,4 +27,14 @@ public class MemberServiceImpl extends ServiceImpl<MemberDao, MemberEntity> impl
         return new PageVo(page);
     }
 
+    @Override
+    public MemberEntity queryUser(String username, String password) {
+        MemberEntity memberEntity=this.getOne(new QueryWrapper<MemberEntity>().eq("username",username));
+        if(memberEntity==null)
+            return null;
+        if(!memberEntity.getPassword().equals(DigestUtils.md5Hex(memberEntity.getSalt()+DigestUtils.md5Hex(password)))){
+            return null;
+        }
+        return memberEntity;
+    }
 }

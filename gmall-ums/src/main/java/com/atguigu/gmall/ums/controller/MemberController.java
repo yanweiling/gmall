@@ -1,7 +1,6 @@
 package com.atguigu.gmall.ums.controller;
 
 import java.util.Arrays;
-import java.util.Map;
 
 
 import com.atguigu.core.bean.PageVo;
@@ -13,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import com.atguigu.gmall.ums.entity.MemberEntity;
+import com.agtuigu.gmall.ums.entity.MemberEntity;
 import com.atguigu.gmall.ums.service.MemberService;
 
 
@@ -92,6 +91,17 @@ public class MemberController {
 		memberService.removeByIds(Arrays.asList(ids));
 
         return Resp.ok(null);
+    }
+
+    /**
+     * 根据用户名和密码查询用户
+     */
+    @GetMapping("query")
+    public Resp<MemberEntity> queryUser(@RequestParam("username") String username, @RequestParam("password") String password
+    ) {
+        MemberEntity member = this.memberService.queryUser(username, password);
+
+        return Resp.ok(member);
     }
 
 }
