@@ -1,30 +1,27 @@
 package com.example.elastic.demo2;
 
 import com.alibaba.fastjson.JSON;
+import com.example.elastic.demo2.dao.ReactivePersonRepository;
 import com.example.elastic.demo2.pojo.Article;
 import com.example.elastic.demo2.pojo.Person;
 import com.example.elastic.demo2.pojo.User;
 import org.elasticsearch.action.index.IndexRequest;
 import org.elasticsearch.action.index.IndexResponse;
 import org.elasticsearch.action.support.WriteRequest;
-import org.elasticsearch.client.RestClient;
 import org.elasticsearch.client.RestHighLevelClient;
 import org.elasticsearch.common.xcontent.XContentType;
-import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.TermQueryBuilder;
-import org.elasticsearch.search.SearchHits;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.ReactiveElasticsearchOperations;
+
+import org.springframework.data.elasticsearch.core.ReactiveElasticsearchTemplate;
 import org.springframework.data.elasticsearch.core.query.GetQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQuery;
 import org.springframework.data.elasticsearch.core.query.IndexQueryBuilder;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQuery;
-import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import reactor.core.publisher.Flux;
+
 
 import java.io.IOException;
 import java.util.Date;
@@ -97,5 +94,14 @@ class ElasticDemo2ApplicationTests {
     }
 
 
+    @Autowired
+    ReactivePersonRepository repository;
+
+    @Test
+    public void init(){
+        Flux<Person> personFlux= repository.findByUserName("阎维玲");
+
+        System.out.println(personFlux);
+    }
 
 }

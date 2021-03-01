@@ -12,11 +12,18 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.client.ClientConfiguration;
 import org.springframework.data.elasticsearch.client.RestClients;
 import org.springframework.data.elasticsearch.config.AbstractElasticsearchConfiguration;
+import org.springframework.data.elasticsearch.core.ReactiveElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.ReactiveElasticsearchTemplate;
+import org.springframework.data.elasticsearch.core.convert.ElasticsearchConverter;
+import org.springframework.data.elasticsearch.core.convert.MappingElasticsearchConverter;
+import org.springframework.data.elasticsearch.core.mapping.SimpleElasticsearchMappingContext;
+import org.springframework.data.elasticsearch.repository.config.EnableReactiveElasticsearchRepositories;
 import org.springframework.http.HttpHeaders;
 
 import java.time.Duration;
 
 @Configuration
+@EnableReactiveElasticsearchRepositories
 public class RestClientConfig extends AbstractElasticsearchConfiguration {
     @Override
     @Bean
@@ -28,13 +35,5 @@ public class RestClientConfig extends AbstractElasticsearchConfiguration {
         return RestClients.create(clientConfiguration).rest();
 
     }
-
-
-
-
-
-
-
-
 }
 
