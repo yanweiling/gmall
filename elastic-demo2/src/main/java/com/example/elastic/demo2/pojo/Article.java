@@ -1,5 +1,6 @@
 package com.example.elastic.demo2.pojo;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Document(indexName = "article",shards = 5, replicas = 1, indexStoreType = "fs", refreshInterval = "-1")
+@Data
 public class Article implements Serializable {
     private static final long serialVersionUID = 551589397625941750L;
     @Id
