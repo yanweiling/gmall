@@ -26,6 +26,9 @@ public class Goods {
 	private Double price;
 
 	@Field(type = FieldType.Long)
+	private Long stock;
+
+	@Field(type = FieldType.Long)
 	private Long sale; // 销量
 
 	@Field(type = FieldType.Date)

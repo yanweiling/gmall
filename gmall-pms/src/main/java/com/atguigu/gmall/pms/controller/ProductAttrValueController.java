@@ -1,6 +1,7 @@
 package com.atguigu.gmall.pms.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
@@ -56,6 +57,18 @@ public class ProductAttrValueController {
 		ProductAttrValueEntity productAttrValue = productAttrValueService.getById(id);
 
         return Resp.ok(productAttrValue);
+    }
+
+    /**
+     * 信息
+     */
+    @ApiOperation("详情查询")
+    @GetMapping("/{spuId}")
+    @PreAuthorize("hasAuthority('pms:productattrvalue:info')")
+    public Resp<List<ProductAttrValueEntity>> info2(@PathVariable("spuId") Long spuId){
+        List<ProductAttrValueEntity> productAttrValueEntities = productAttrValueService.querySearchAttrValue(spuId);
+
+        return Resp.ok(productAttrValueEntities);
     }
 
     /**

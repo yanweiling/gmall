@@ -1,13 +1,17 @@
 package com.atguigu.gmall.pms.controller;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 
 import com.atguigu.core.bean.PageVo;
+import com.atguigu.core.bean.Query;
 import com.atguigu.core.bean.QueryCondition;
 import com.atguigu.core.bean.Resp;
 import com.atguigu.gmall.pms.vo.SpuInfoVO;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -101,6 +105,17 @@ public class SpuInfoController {
 
         PageVo page = this.spuInfoService.querySpuInfo(condition, catId);
         return Resp.ok(page);
+    }
+
+    @ApiOperation("分页查询已发布spu商品信息")
+    @PostMapping("{status}")
+    public Resp<List<SpuInfoEntity>> querySpuByStatus(@RequestBody QueryCondition condition,
+                                                      @PathVariable("status")String status){
+        IPage<SpuInfoEntity> page=new Query<SpuInfoEntity>().getPage(condition);
+        QueryWrapper<SpuInfoEntity> wrapper=new QueryWrapper<>();
+        wrapper.eq("publish_status",status);
+        IPage<SpuInfoEntity> spuInfoEntityIPage=this.spuInfoService.page(page,wrapper);
+        return Resp.ok(spuInfoEntityIPage.getRecords());
     }
 
 }
